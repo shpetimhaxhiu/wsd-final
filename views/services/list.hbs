@@ -1,0 +1,169 @@
+<div class='row'>
+  <div class='card' style="width: 100%;">
+<div class="card-header">
+      All Services
+    </div>
+    <div class='card-body pt-4'>
+      <div class='table-responsive'>
+        <table
+          id='services-table'
+          class='table table-hover table-bordered'
+          style='width:100%'
+        >
+          <thead>
+            <tr>
+              <th>Host name</th>
+              <th>Status</th>
+              <th style="width:fit-content;">Security</th>
+              <th>Enabled</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each allServices.service_reports}}
+              <tr>
+                <td>
+                  <span class="text-primary">{{this.host.name}}</span>
+                  <br />
+                  <small>DS:
+                    {{this.host.downstream_protocol}}://{{this.host.downstream_host}}:{{this.host.downstream_port}}</small><br
+                  />
+
+                  <small>US: {{this.host.upstream_protocol}}://{{this.host.upstream_host}}:{{this.host.upstream_port}}</small>
+                </td>
+                <td>
+                  <h5>{{{status this.status_text}}}</h5>
+                  <h5>{{{this.status_code}}}</h5>
+                  </td>
+                <td>
+                  <small>JWT Auth: {{{toggle this.host.auth_schema_jwt}}}</small><br />
+                  <small>OAuth2 Auth: {{{toggle this.host.auth_schema_oauth2}}}</small><br />
+                  <small>Block Access: {{{toggle this.host.auth_schema_jwt}}}</small><br />
+                  <small>Web Firewall:
+                    {{{toggle this.host.options.waf_enabled}}}</small><br />
+                </td>
+                <td>{{{toggle this.host.enabled}}}</td>
+                <td class="text-right">
+                  
+                {{#if (isOk this.status_text)}}
+                    
+                    <!-- Button trigger modal -->
+                    <button
+                      type='button'
+                      class='btn btn-primary btn-sm ml-1 mb-1'
+                      data-toggle='modal'
+                      data-target='#model{{@index}}'
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+  <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+  <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+</svg>
+                    </button>
+
+                    <!-- Modal -->
+                    <div
+                      class='modal fade'
+                      id='model{{@index}}'
+                      tabindex='-1'
+                      role='dialog'
+                      aria-labelledby='modelTitle{{@index}}'
+                      aria-hidden='true'
+                    >
+                      <div class='modal-dialog modal-lg' role='document'>
+                        <div class='modal-content'>
+                          <div class='modal-header'>
+                            <h5 class='modal-title'>{{this.host.name}} nodes</h5>
+                            <button
+                              type='button'
+                              class='close'
+                              data-dismiss='modal'
+                              aria-label='Close'
+                            >
+                              <span aria-hidden='true'>&times;</span>
+                            </button>
+                          </div>
+                          <div class='modal-body'>
+                            <div class='accordion' id='accordionExample'>
+                              {{#each nodes}}
+                                <div class='card'>
+                                  <div class='card-header' id='heading{{@index}}'>
+                                    <h4 class='mb-0'>
+                                      <button
+                                        class='btn btn-link btn-block text-left'
+                                        type='button'
+                                        data-toggle='collapse'
+                                        data-target='#collapse{{@index}}'
+                                        aria-expanded='true'
+                                        aria-controls='collapseOne'
+                                      >
+                                        List of checks for web node: {{this.web_node}} {{#if this.total_alerts}} <span class="badge badge-danger">{{ this.total_alerts}}</span> {{/if}}
+                                      </button>
+                                    </h2>
+                                  </div>
+
+                                  <div
+                                    id='collapse{{@index}}'
+                                    class='collapse {{#if @first}} show {{/if}}'
+                                    aria-labelledby='heading{{@index}}'
+                                    data-parent='#accordionExample'
+                                  >
+                                    <div class='card-body'>
+                                      <table id="checksTable" class="table table-bordered" style="width:auto;">
+                                          <thead class="thead-dark">
+                                          <tr>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Message</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {{#each this.checks}}
+                                          <tr>
+                                            <td scope="row">{{this.name}}</td>
+                                            <td>{{{nodeCheck this.state}}}</td>
+                                            <td>{{this.message}}</td>
+                                          </tr>
+                                          {{/each}}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              {{/each}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  
+                  {{else}}
+                  <button
+                      type='button'
+                      class='btn btn-primary btn-sm ml-1 mb-1' 
+                       data-toggle="tooltip" data-placement="top" title="No checks"
+                      disabled
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+  <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+  <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+</svg>
+                    </button>
+                  {{/if}}
+                  
+                  <a href="service/{{this.host.id}}"
+                      type='button'
+                      class='btn btn-info btn-sm ml-1 mb-1'
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+</svg>
+                    </a>
+                </td>
+              </tr>
+            {{/each}}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

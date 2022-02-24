@@ -1,0 +1,56 @@
+
+<div class='mt-2'>
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    {{#each groupedByStatus as | statusGroup |}}
+      <li class="nav-item" role="presentation">
+        <a class="nav-link h5 font-weight-bold {{#if @first}} font-weight-bold active {{/if}} tabs-class" id="wsd-{{@index}}-tab" data-toggle="tab" href="#wsd-{{@index}}" role="tab" aria-controls="wsd-{{@index}}" aria-selected="{{#if @first}} true {{/if}}"> {{ status this.[0].status_text}} </a>
+      </li>
+
+    {{/each}}
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    {{#each groupedByStatus}}
+    <div class="border-left border-bottom border-right px-4 py-5 tab-pane fade {{#if @first}} show active {{/if}}" id="wsd-{{@index}}" role="tabpanel" aria-labelledby="wsd-{{@index}}-tab">
+
+      <div class=''>
+        <div class='table-responsive px-2'>
+          <table
+            id=''
+            class='table table-hover table-bordered nowrap group-table'
+          >
+            <thead>
+              <tr>
+                <th>Hostname</th>
+                <th>Host Address</th>
+                <th>Enabled</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each this}}
+                <tr>
+                  <td>{{this.host.name}} {{this.host.status_code}}</td>
+                  <td>{{this.host.downstream_host}}</td>
+                  <td>{{{ toggle this.host.enabled}}}</td>
+                  <td class="text-center">
+                    <a href="service/{{this.host.id}}"
+                      type='button'
+                      class='btn btn-info btn-sm ml-1 mb-1'
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+</svg>
+                    </a>
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  {{/each}}
+  </div>
+</div>

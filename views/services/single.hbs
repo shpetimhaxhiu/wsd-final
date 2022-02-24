@@ -1,0 +1,142 @@
+<div class='row'>
+  <div class='col-8'>
+    <div class='card'>
+      <div class='card-header'>Service Details</div>
+      <div class='card-body'>
+        <table class="table table-borderless table-hover">
+        <tbody>
+            
+            <tr class="bg-light">
+                <td colspan="2">
+                    General Information
+                </td>
+            </tr>
+            <tr>
+                <td><b>Hostname</b></td>
+                <td>{{report.host.name}} {{#if report.host.enabled}} <span class="display-3 badge badge-success p-2 mx-2">Enabled</span>{{else}}  <span class="display-3 badge badge-danger  p-2 mx-2">Disabled</span>{{/if}}</td>
+            </tr>
+            <tr>
+                <td><b>Status Code and Message</b></td>
+                <td> {{report.status_code}} : {{report.status_text}}</td>
+            </tr>
+            <tr>
+                <td><b>Downstream</b></td>
+                <td>
+                    <a href="{{report.host.downstream_protocol}}://{{report.host.downstream_host}}:{{report.host.downstream_port}}">
+                    {{report.host.downstream_protocol}}://{{report.host.downstream_host}}:{{report.host.downstream_port}}</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Upstream</b></td>
+                <td>
+                    <a href="{{report.host.upstream_protocol}}://{{report.host.upstream_host}}:{{report.host.upstream_port}}">
+                    {{report.host.upstream_protocol}}://{{report.host.upstream_host}}:{{report.host.upstream_port}}</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Service Key</b></td>
+                <td>{{report.host.options.service_key}}</td>
+            </tr>
+            <tr>
+                <td><b>Ping URL Path</b></td>
+                <td>{{report.host.options.ping_url_path}}</td>
+            </tr>
+            <tr>
+                <td class="bg-white"></td>
+            </tr>
+            {{#if report.nodes}}
+            <tr class="bg-light">
+                <td colspan="2">
+                    Nodes Information
+                </td>
+            </tr>
+            {{#each report.nodes}}
+            <tr>
+                <td><b>Web Node</b></td>
+                <td>
+                     {{this.web_node}}
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sttatus Code and Message</b></td>
+                <td>
+                     {{this.status_code}} :  {{this.status_text}}
+                </td>
+            </tr>
+            <tr>
+                <td><b>Alerts</b></td>
+                <td>
+                     {{this.total_alerts}}
+                </td>
+            </tr>
+            <tr>
+                <td class="bg-white"></td>
+            </tr>
+            {{#if this.checks}}
+            <tr class="bg-light">
+                <td colspan="2">
+                    Node Checks
+                </td>
+            </tr>
+            {{#each this.checks}}
+            
+            <tr>
+                <td>
+                   <b> {{this.name}}</b>
+                    <br>
+                    {{this.message}}</td>
+                <td>{{{nodeCheck this.state}}}</td>
+            </tr>
+            {{/each}}
+            {{/if}}
+            {{/each}}
+            {{/if}}
+
+        </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+    <div class='col-4'>
+    <div class='card'>
+      <div class='card-header'>Security Information</strong></div>
+      <div class='card-body'>
+                  <table class="table table-borderless table-hover">
+        <tbody>
+            <tr>
+                <td><b>JWT Authentication Schema</b></td>
+                <td>
+                     {{#if report.host.auth_schema_jwt}} <span class="display-3 badge badge-success p-2">Enabled</span>{{else}}  <span class="display-3 badge badge-danger  p-2">Disabled</span>{{/if}}
+                </td>
+            </tr>
+            <tr>
+                <td><b>OAuth2 Authentication Schema</b></td>
+                <td>
+                     {{#if report.host.auth_schema_oauth2}} <span class="display-3 badge badge-success p-2">Enabled</span>{{else}}  <span class="display-3 badge badge-danger  p-2">Disabled</span>{{/if}}
+                </td>
+            </tr>
+            <tr>
+                <td><b>User Access Block</b></td>
+                <td>
+                     {{#if report.host.block_guest_access}} <span class="display-3 badge badge-success p-2">Enabled</span>{{else}}  <span class="display-3 badge badge-danger  p-2">Disabled</span>{{/if}}
+                </td>
+            </tr>
+            <tr>
+                <td><b>Web Application Firewall</b></td>
+                <td>
+                     {{#if report.host.options.waf_enabled}} <span class="display-3 badge badge-success p-2">Enabled</span>{{else}}  <span class="display-3 badge badge-danger  p-2">Disabled</span>{{/if}}
+                </td>
+            </tr>
+            <tr>
+                <td><b>Failover</b></td>
+                <td>
+                     {{#if report.host.options.failover_to}} <span class="display-3 badge badge-success p-2">{{report.host.options.failover_to}}</span>{{else}}  <span class="display-3 badge badge-danger  p-2">None</span>{{/if}}
+                </td>
+            </tr>
+        </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
